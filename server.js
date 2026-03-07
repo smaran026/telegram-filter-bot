@@ -6,7 +6,7 @@ app.use(express.json());
 
 const MAKE_WEBHOOK = "https://hook.eu1.make.com/c6csfcesv8t8efckjke6wkyw3fayzri9";
 
-app.post("/", async (req, res) => {
+app.post("/webhook", async (req, res) => {
   const message = req.body.message;
 
   if (!message || !message.text) {
