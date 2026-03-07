@@ -5,7 +5,7 @@ const app = express();
 app.use(express.json());
 
 // 🔴 PUT YOUR MAKE WEBHOOK URL HERE
-const MAKE_WEBHOOK = "https://hook.make.com/YOUR_WEBHOOK_ID";
+const MAKE_WEBHOOK = "https://hook.eu1.make.com/c6csfcesv8t8efckjke6wkyw3fayzri9";
 
 app.post("/webhook", async (req, res) => {
 
