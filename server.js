@@ -6,36 +6,27 @@ app.use(express.json());
 
 const MAKE_WEBHOOK = "https://hook.eu1.make.com/c6csfcesv8t8efckjke6wkyw3fayzri9";
 
-app.post("/webhook", async (req, res) => {
-  try {
+app.post("/webhook", (req, res) => {
 
-    const message = req.body.message;
+  // respond immediately to Telegram
+  res.sendStatus(200);
 
-    if (!message || !message.text) {
-      return res.sendStatus(200);
-    }
+  const message = req.body.message;
 
-    const text = message.text;
-
-    // Only allow commands
-    if (!text.startsWith("/")) {
-      return res.sendStatus(200);
-    }
-
-    console.log("Command:", text);
-
-    try {
-      await axios.post(MAKE_WEBHOOK, req.body);
-    } catch (err) {
-      console.log("Make webhook error:", err.message);
-    }
-
-    res.sendStatus(200);
-
-  } catch (err) {
-    console.log("Server error:", err.message);
-    res.sendStatus(200);
+  if (!message || !message.text) {
+    return;
   }
+
+  if (!message.text.startsWith("/")) {
+    return;
+  }
+
+  console.log("Command received:", message.text);
+
+  axios.post(MAKE_WEBHOOK, req.body)
+    .then(() => console.log("Sent to Make"))
+    .catch(err => console.log("Make error:", err.message));
+
 });
 
 const PORT = process.env.PORT || 3000;
