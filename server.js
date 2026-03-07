@@ -4,7 +4,7 @@ const axios = require("axios");
 const app = express();
 app.use(express.json());
 
-const MAKE_WEBHOOK = "PASTE_YOUR_MAKE_WEBHOOK_HERE";
+const MAKE_WEBHOOK = "node-app-production-7fa7.up.railway.app";
 
 app.post("/", async (req, res) => {
   const message = req.body.message;
