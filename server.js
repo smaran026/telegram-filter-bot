@@ -17,16 +17,15 @@ app.post("/webhook", async (req, res) => {
 
     const text = message.text;
 
-    // Only forward commands
+    // Only allow commands
     if (!text.startsWith("/")) {
       return res.sendStatus(200);
     }
 
-    console.log("Command received:", text);
+    console.log("Command:", text);
 
     try {
       await axios.post(MAKE_WEBHOOK, req.body);
-      console.log("Forwarded to Make");
     } catch (err) {
       console.log("Make webhook error:", err.message);
     }
