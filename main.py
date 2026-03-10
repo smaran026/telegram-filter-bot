@@ -1,8 +1,10 @@
 import os
+import requests
 from telegram import Update
 from telegram.ext import ApplicationBuilder, CommandHandler, ContextTypes
 
 TOKEN = os.getenv("TOKEN")
+MAKE_WEBHOOK = os.getenv("MAKE_WEBHOOK")
 
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
@@ -14,7 +16,18 @@ async def router(update: Update, context: ContextTypes.DEFAULT_TYPE):
     text = update.message.text
     command = text.split()[0]
 
-    await update.message.reply_text(f"Command received: {command}")
+    data = {
+        "command": command,
+        "user_id": update.effective_user.id,
+        "username": update.effective_user.username,
+        "args": context.args
+    }
+
+    try:
+        requests.post(MAKE_WEBHOOK, json=data)
+        await update.message.reply_text("Command sent to server")
+    except:
+        await update.message.reply_text("Server connection failed")
 
 
 def main():
