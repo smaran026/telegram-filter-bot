@@ -8,7 +8,7 @@ const MAKE_WEBHOOK = "https://hook.eu1.make.com/c6csfcesv8t8efckjke6wkyw3fayzri9
 
 app.post("/webhook", (req, res) => {
 
-  // respond immediately to Telegram
+  // Respond to Telegram immediately
   res.sendStatus(200);
 
   const message = req.body.message;
@@ -17,13 +17,24 @@ app.post("/webhook", (req, res) => {
     return;
   }
 
-  if (!message.text.startsWith("/")) {
+  const text = message.text;
+
+  // Only process commands
+  if (!text.startsWith("/")) {
     return;
   }
 
-  console.log("Command received:", message.text);
+  console.log("Command received:", text);
 
-  axios.post(MAKE_WEBHOOK, req.body)
+  const payload = {
+    user_id: message.from.id,
+    username: message.from.username || "",
+    first_name: message.from.first_name || "",
+    text: text,
+    chat_id: message.chat.id
+  };
+
+  axios.post(MAKE_WEBHOOK, payload)
     .then(() => console.log("Sent to Make"))
     .catch(err => console.log("Make error:", err.message));
 
