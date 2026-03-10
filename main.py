@@ -13,20 +13,26 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 async def router(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
-    command = update.message.text.split()[0].replace("/", "")
+    message = update.message
+    text = message.text
 
-    data = {
+    command = text.split()[0].replace("/", "")
+
+    payload = {
         "command": command,
-        "user_id": update.effective_user.id,
-        "username": update.effective_user.username,
-        "chat_id": update.effective_chat.id,
+        "text": text,
+        "user_id": message.from_user.id,
+        "username": message.from_user.username or "",
+        "first_name": message.from_user.first_name or "",
+        "chat_id": message.chat.id,
         "args": context.args
     }
 
     try:
-        requests.post(MAKE_WEBHOOK, json=data)
+        requests.post(MAKE_WEBHOOK, json=payload)
         await update.message.reply_text("Processing request...")
-    except:
+    except Exception as e:
+        print(e)
         await update.message.reply_text("Server connection failed")
 
 
@@ -37,7 +43,7 @@ def main():
     app.add_handler(CommandHandler("start", start))
 
     commands = [
-        "add",
+        "addme",
         "tokens",
         "level",
         "base",
