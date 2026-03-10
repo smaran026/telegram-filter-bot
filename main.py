@@ -13,35 +13,21 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 async def router(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
-    text = update.message.text
-    command = text.split()[0].replace("/", "")
+    command = update.message.text.split()[0].replace("/", "")
 
-    MAKE_COMMANDS = [
-        "add",
-        "tokens",
-        "level",
-        "base",
-        "cry",
-        "reset"
-    ]
+    data = {
+        "command": command,
+        "user_id": update.effective_user.id,
+        "username": update.effective_user.username,
+        "chat_id": update.effective_chat.id,
+        "args": context.args
+    }
 
-    if command in MAKE_COMMANDS:
-
-        data = {
-            "command": command,
-            "user_id": update.effective_user.id,
-            "username": update.effective_user.username,
-            "args": context.args
-        }
-
-        try:
-            requests.post(MAKE_WEBHOOK, json=data)
-            await update.message.reply_text("Processing request...")
-        except:
-            await update.message.reply_text("Server connection failed")
-
-    else:
-        await update.message.reply_text("Command handled locally (coming soon)")
+    try:
+        requests.post(MAKE_WEBHOOK, json=data)
+        await update.message.reply_text("Processing request...")
+    except:
+        await update.message.reply_text("Server connection failed")
 
 
 def main():
